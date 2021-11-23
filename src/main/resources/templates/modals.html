@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+
+
+
+</head>
+<body>
+<!-- Modal to choose the devise  -->
+
+<div id = deviceModalHolder th:fragment="deviceModalFragment">
+    <div id="deviceModal" class="modal fade  " tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <img src="/image/mtn_logo2.png" class="logo_image" alt="Logo">
+                    <h5 th:if="${session.activeMember!=null}" class="modal-title">Choosing a Device for <span th:text="${session.activeMember.surname}"></span> <span th:text="${session.activeMember.name}"></span> </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <section class="my-5">
+                        <div class="container">
+                            <div class="row">
+                                <div class=" mx-auto">
+                                    <h2 th:text="${activeMember.name}"></h2>
+
+                                    <form th:if="${deviceType!=null}" action="#" th:action="@{/saveuser}" th:object="${deviceType}" method="POST" id ="deviceform">
+
+                                        <div>
+                                            <label for="categoryid" >Device Category: </label>
+                                            <select th:field="${deviceType.devicetypecategory}" id="categoryid">
+                                                <option th:each="category : ${categories}"
+                                                        th:text="${category.categoryName}"
+                                                        th:value="${category.id}">
+                                            </select>
+                                        </div>
+
+
+                                        <!-- carousel for device images -->
+<!-- for each -->               <div th:each="offer,itrStat:${offers.getOffers()}">
+
+                                        <div  th:id="'demo'+${itrStat.index}" class="carousel slide" data-ride="carousel">
+
+                                            <!-- Indicators -->
+
+                                            <ul class="carousel-indicators">
+                                                <div th:each="photo,myphotos:${offer.getSpecs().photos}">
+
+                                                <li  th:text="'data-target=#demo'+${itrStat.index}+'  data-slide-to='+${myphotos.index}+'  class=active'"></li>
+                                         <!--       <li data-target="#demo" data-slide-to="1"></li>
+                                                <li data-target="#demo" data-slide-to="2"></li> -->
+                                                </div>
+                                            </ul>
+
+                                            <!-- The slideshow -->
+
+                                            <div class="carousel-inner">
+                                                <span th:each="photo,iterphoto:${offer.getSpecs().photos}">
+                                        <div th:with="myphoto ='data:image/'+${photo.getPhototype().replace('.','')}+';base64,'+${photo.encodedImage}">
+                                         <span th:if="${iterphoto.index==0}">
+                                          <div class="carousel-item active">
+                                            <img  th:src="${myphoto}" alt="NO IMAGE LOADED"/>
+                                          </div>
+                                       </span>
+                                             <span th:unless="${iterphoto.index==0}">
+                                          <div class="carousel-item">
+                                            <img  th:src="---" alt="NO IMAGE LOADED"/>
+                                          </div>
+                                       </span>
+
+                                        </div>
+
+                                    </span>
+
+                                            </div>
+
+                                            <!-- Left and right controls -->
+                                            <a class="carousel-control-prev" th:href="'#demo'+${itrStat.index}" data-slide="prev">
+                                                <span class="carousel-control-prev-icon"></span>
+                                            </a>
+                                            <a class="carousel-control-next" th:href="'#demo'+${itrStat.index}" data-slide="next">
+                                                <span class="carousel-control-next-icon"></span>
+                                            </a>
+                                        </div>
+
+
+                    <!-- offer from offers -->                </div>
+
+
+<!--
+
+                 <span th:if="${offers.getOffers()!=null}"  th:each="offer, itrStat :${offers.getOffers()}">
+                                <div  th:id="'carouselExampleIndicators'+${itrStat.index}" class="carousel slide" data-ride="carousel">
+                                     <ol class="carousel-indicators">
+                                        <div th:each="photo,iterphoto:${offer.getSpecs().photos}">
+                                        <div th:with="myli ='data-target=carouselExampleIndicators'+${itrStat.index}+'  data-slide-to='+${iterphoto.index}">
+                                           <th:li ${myli} ></th:li>
+                                            <p th:text="${myli}"></p>
+                                        </div>
+                                      </div>
+                                    </ol>
+                                    <div class="carousel-inner">
+                                       <span th:each="photo:${offer.getSpecs().photos}">
+                                        <div th:with="myphoto ='data:image/'+${photo.getPhototype().replace('.','')}+';base64,'+${photo.encodedImage}">
+                                          <div class="carousel-item active">
+                                            <img  th:src="${myphoto}" alt="NO IMAGE LOADED"/>
+                                          </div>
+                                        </div>
+
+                                    </span>
+                                    <a class="carousel-control-prev" th:href="'#carouselExampleIndicators'+${itrStat.index}" role="button" data-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" th:href="'#carouselExampleIndicators'+${itrStat.index}" role="button" data-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </div>
+
+                                </div>
+                 </span>
+
+-->
+
+
+
+                                        <!--
+
+
+                                            <div id="demo" class="carousel slide" data-ride="carousel">
+
+
+
+                                                <ul class="carousel-indicators">
+                                                  <span th:each=" offer1:${offers.getOffers()}" />
+                                                    <li th:if="${offers.getOffers()!=null}"    data-target="#demo" data-slide-to="0" class="active"></li>
+                                                  </span>
+                                                </ul>
+
+
+                                                <tr th:each="offer:${offers.getOffers()}">
+
+
+                                                <td th:each="photo:${offer.getSpecs().photos}">
+                                                    <div th:with="myphoto ='data:image/'+${photo.getPhototype().replace('.','')}+';base64,'+${photo.encodedImage}">
+                                                        <img  th:src="${myphoto}"/>
+                                                    </div>
+
+
+
+
+                                                </div>
+
+
+
+                                                <a class="carousel-control-prev" href="#demo" data-slide="prev">
+                                                    <span class="carousel-control-prev-icon"></span>
+                                                </a>
+                                                <a class="carousel-control-next" href="#demo" data-slide="next">
+                                                    <span class="carousel-control-next-icon"></span>
+                                                </a>
+                                            </div>
+                                            </td>
+                                            </tr>
+            -->
+                                        <!-- carousel for device images -->
+
+
+
+
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- modal for device choosing -->
+
+
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments::html_header"></head>
+</head>
+<body>
+
+
+
+
+
+<div th:replace="login::menus">
+</div>
+<button id="button" type="button" class="btn btn-success btn-small" data-toggle="modal" data-target="#modalTable">
+   Add New User
+</button>
+<div id="modalTable" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="/image/mtn_logo2.png" class="logo_image" alt="Logo">
+                <h5 class="modal-title">Adding a new Corporate User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" th:action="@{/saveuser}" th:object="${newuser}" method="POST" id ="userform">
+                   <input class="form-control form-control form-control-sm"  th:field="${newuser.name}" type="text" placeholder=" Full Name of the User">
+                   <input class="form-control form-control-sm" type="text" th:field="${newuser.surname}" placeholder="Surname of the user">
+                   <input class="form-control form-control-sm" th:field="${newuser.email}" type="text" placeholder="Email">
+                   <input class="form-control form-control-sm" th:field="${newuser.msisdn}" type="text" placeholder="Phone Number 078/079">
+                    <div class="d-flex justify-content-right mt-3 login_container">
+                        <input  type="submit"  th:value="Save" class="btn login_btn "></input>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var $userform = $('#userform')
+
+    $(function() {
+        $('#modalTable').on('shown.bs.modal', function () {
+            $userform.bootstrapTable('resetView')
+        })
+    })
+</script>
+
+
+    <table class="table" id="table"  data-toggle="table"
+
+           data-pagination="true"
+           data-toolbar=".toolbar"
+        data-show-print="false"
+           data-sortable="false"
+           data-search="true">
+        <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Surname</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone Number</th>
+
+        </tr>
+        </thead>
+        <tbody>
+
+        <tr th:each="user, state : ${users}">
+           <!-- class="row" th:classappend="${state.odd} ? 'odd-row' : 'even-row'">-->
+            <td th:utext="${state.count}">No</td>
+            <td th:utext="${user.name}">Full Name</td>
+            <td th:utext="${user.surname}">Email</td>
+            <td th:utext="${user.email}">Email</td>
+            <td th:utext="${user.msisdn}">Email</td>
+        </tr>
+
+
+        </tbody>
+    </table>
+
+
+
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments::html_header"> </div>
+
+<body>
+<div th:replace="login::menus">
+</div>
+<div id="toolbar">
+    <a class="active btn btn-success"   aria-current="page" th:href="@{/users}">Excel Format File</a>
+    <button id="button" type="button" class="btn btn-success btn-small" data-toggle="modal" data-target="#modalTable">
+        Add New Member
+    </button>
+    <button id="button2" type="button" class="btn btn-success btn-small" data-toggle="modal" data-target="#modalExcelMembersTemplate">
+        Add Via Excel File
+    </button>
+
+
+</div>
+<hr th:height="10"/>
+<!-- MODAL FOR INDIVIDUAL MEMBER ADDITION -->
+
+<div id="modalTable" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="/image/mtn_logo2.png" class="logo_image" alt="Logo">
+                <h5 class="modal-title">Adding a new Corporate Member</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" th:action="@{/savemember}" th:object="${newmember}" method="POST" id ="memberform">
+                    <input class="form-control form-control form-control-sm"  th:field="${newmember.name}" type="text" placeholder=" Member Name">
+                    <input class="form-control form-control-sm" type="text" th:field="${newmember.surname}" placeholder="Member Surname">
+                    <input class="form-control form-control-sm" th:field="${newmember.memberEmail}" type="text" placeholder="Email Address">
+
+                    <select class="form-control" id="gender" th:field="${newmember.gender}">
+                        <option value="">Choose Gender</option>
+                        <option th:value="M">Male</option>
+                        <option th:value="F">Female</option>
+
+
+                    </select>
+                    <select class="form-control" id="maritalstatus" th:field="${newmember.martial_status}">
+                        <option value=""> Choose Marital Status </option>
+                        <option th:value="M">Married</option>
+                        <option th:value="S">Single</option>
+                        <option th:value="Widowed">Single</option>
+                        <option th:value="Se">Separated</option>
+                        <option th:value="D">Divorced</option>
+
+
+                    </select>
+
+                    <input class="form-control form-control-sm" th:field="${newmember.address}" type="text" placeholder="Residential Address">
+                    <input class="form-control form-control-sm" th:field="${newmember.msisdn}" type="text" placeholder="Phone Number 078/079">
+                    <select class="form-control" id="nationalIdtype" th:field="${newmember.identification_type}">
+                        <option value="">Ident. Document TYpe Id </option>
+                        <option th:value=1>National Id </option>
+                        <option th:value=2>Passport</option>
+                        <option th:value=3>Driving Licence</option>
+
+                    </select>
+
+
+                    <input class="form-control form-control-sm" th:field="${newmember.national_id_number}" type="text" placeholder="National Id Number">
+
+                    <div class="d-flex justify-content-right mt-3 login_container">
+                        <input  type="submit"  th:value="Save" class="btn login_btn "></input>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var $userform = $('#userform')
+
+    $(function() {
+        $('#modalTable').on('shown.bs.modal', function () {
+            $userform.bootstrapTable('resetView')
+        })
+    })
+</script>
+<!-- MODAL FOR INDIVIDUAL MEMBER ADDITION -->
+
+
+<!-- Upload an excel file that has the members list  -->
+
+<div id="modalExcelMembersTemplate" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <img src="/image/mtn_logo2.png" class="logo_image" alt="Logo">
+                <h5 class="modal-title">Adding Corporate Members from Excel File</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                   <section class="my-5">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-8 mx-auto">
+                                    <h2>Upload Excel File Containing Corporate Members(Employees)</h2>
+
+                                    <form method="post" th:action="@{/templateupload}" enctype="multipart/form-data">
+                                        <div class="form-group">
+                                            <input type="file" name="file" class="form-control-file">
+                                        </div>
+                                        <button type="submit" class="btn btn-warning">Upload File</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </form>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var $userform = $('#exceltemplateform')
+
+    $(function() {
+        $('#modalExcelMembersTemplate').on('shown.bs.modal', function () {
+            $userform.bootstrapTable('resetView')
+        })
+    })
+</script>
+<!-- MODal for uplading the members excel sheet  -->
+
+
+
+
+
+<!-- Modal to choose the devise  -->
+<div  th:replace="modals::deviceModalFragment"> </div>
+
+
+
+
+<script>
+
+function chooseformemberdevice(id)
+{
+
+    $.ajax({
+        type: 'POST',
+        url: "/showdevicecategories?memberid="+id,
+        headers: {
+            'Content-Type':'application/json'
+        },
+        type:"GET"
+        //OR
+        //beforeSend: function(xhr) {
+        //  xhr.setRequestHeader("My-First-Header", "first value");
+        //  xhr.setRequestHeader("My-Second-Header", "second value");
+        //}
+    }).done(function(data) {
+    //   alert(data);
+
+      $('#deviceModalHolder').html(data);
+      $('#deviceModal').modal();
+    });
+
+   // alert(id);
+}
+</script>
+</div>
+<!-- MODal for uplading the members excel sheet  -->
+
+
+
+
+
+
+<table class="table" id="table"  data-toggle="table"
+       data-height="460"
+       data-pagination="true"
+       data-toolbar=".toolbar"
+       data-show-print="false"
+       data-sortable="false"
+       data-search="true">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Second Name</th>
+        <th scope="col">Email</th>
+
+        <th scope="col">Ident. Doc. Number</th>
+        <th scope="col">Adress</th>
+        <th scope="col">Phone Number</th>
+        <th scope="col">Operations</th>
+
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="member, state : ${members}">
+        <!-- class="row" th:classappend="${state.odd} ? 'odd-row' : 'even-row'">-->
+        <td th:utext="${state.count}">No</td>
+        <td th:utext="${member.name}">First Name</td>
+        <td th:utext="${member.surname}">Second Name</td>
+        <td th:utext="${member.memberEmail}">Email</td>
+        <td th:utext="${member.national_id_number}">Ident. Doc. Number</td>
+       <td th:utext="${member.address}">Resid. Address</td>
+        <td th:utext="${member.msisdn}">Phone Number</td>
+      <td>
+          <a th:onclick="'javascript:chooseformemberdevice(\''+${member.memberId}+'\');'" class="active btn btn-success"><i class="fa fa-mobile"></i></a>
+
+          <a  id="memberchoosedevice" class="active btn btn-success"   aria-current="page" th:href="@{/showdevicecategories/(memberid=${member.memberId})}"><i class="fa fa-mobile"></i></a></a>
+        <span><a class="btn btn-primary"> <i class="fa fa-mobile"></i></a></span>
+          <span><a class="btn btn-primary"> <i class="fa fa-edit"></i></a></span>
+          <span> <a class="btn btn-danger"> <i class="fa fa-trash"></i></a></span>
+      </td>
+
+
+
+
+
+    </tr>
+
+
+    </tbody>
+</table>
+
+</body>
+</html>
